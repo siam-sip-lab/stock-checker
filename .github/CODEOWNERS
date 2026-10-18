@@ -1,0 +1,4 @@
+# Default owners for everything
+*            @siam-sip-lab/developers
+# Repository configuration needs the platform team
+/.github/    @siam-sip-lab/platform
