@@ -1,11 +1,15 @@
-# <repository-name>
+# stock-checker
 
-<One sentence: what this repository does and for whom.>
+CLI that checks stock levels from a CSV file and flags low stock.
 
 ## Quick start
 
 ```bash
-# commands to install and run
+python -m venv .venv
+source .venv/Scripts/activate      # Git Bash on Windows (macOS/Linux: .venv/bin/activate)
+pip install -e ".[dev]"
+python -m stock_checker data/sample_stock.csv
+pytest
 ```
 
 ## How to contribute
