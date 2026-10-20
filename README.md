@@ -6,6 +6,8 @@ CLI that checks stock levels from a CSV file and flags low stock.
 
 ## Quick start
 
+Requires Python 3.12 or newer.
+
 ```bash
 python -m venv .venv
 source .venv/Scripts/activate      # Git Bash on Windows (macOS/Linux: .venv/bin/activate)
