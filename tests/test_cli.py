@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from stock_checker import __version__
@@ -52,3 +54,23 @@ def test_option_overrides_config_file(capsys, tmp_path):
     config.write_text("threshold = 20\n", encoding="utf-8")
     lines = lines_for(capsys, "--config", str(config), "--threshold", "5")
     assert not lines["SS-003"].endswith("LOW")  # 15 is not below 5
+
+
+def test_json_output(capsys):
+    assert main(["data/sample_stock.csv", "--format", "json"]) == 0
+    data = json.loads(capsys.readouterr().out)
+    assert len(data) == 8
+    by_sku = {row["sku"]: row for row in data}
+    assert by_sku["SS-002"] == {
+        "sku": "SS-002",
+        "name": "Lemongrass Soda 330ml",
+        "warehouse": "bangna",
+        "quantity": 7,
+        "low": True,
+    }
+    assert by_sku["SS-006"]["low"] is False
+
+
+def test_text_output_is_default(capsys):
+    assert main(["data/sample_stock.csv"]) == 0
+    assert not capsys.readouterr().out.lstrip().startswith("[")
