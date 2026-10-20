@@ -1,0 +1,19 @@
+name: ci
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, edited, synchronize, reopened]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    uses: siam-sip-lab/.github/.github/workflows/python-ci.yml@main
+
+  pr:
+    if: github.event_name == 'pull_request'
+    uses: siam-sip-lab/.github/.github/workflows/pr-checks.yml@main
