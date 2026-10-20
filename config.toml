@@ -1,0 +1,3 @@
+# stock-checker settings
+# Items with quantity below this number are marked LOW.
+threshold = 10
