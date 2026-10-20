@@ -16,6 +16,20 @@ python -m stock_checker data/sample_stock.csv
 pytest
 ```
 
+## Usage
+
+```bash
+python -m stock_checker <csv_path> [--threshold N] [--config PATH] [--format text|json]
+```
+
+| Option | Meaning | Default |
+| --- | --- | --- |
+| `--threshold N` | mark items below N as LOW; overrides every value in the config file | from `config.toml` |
+| `--config PATH` | config file to read | `config.toml` |
+| `--format text\|json` | output format | `text` |
+
+Per-warehouse thresholds go in `config.toml` under `[warehouses.<name>]`.
+
 ## How to contribute
 
 Follow the org [contributing guide](https://github.com/siam-sip-lab/.github/blob/main/CONTRIBUTING.md).
