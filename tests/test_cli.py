@@ -38,3 +38,17 @@ def test_negative_threshold_is_rejected(capsys):
         main(["data/sample_stock.csv", "--threshold", "-1"])
     assert exc.value.code == 2
     assert "must be 0 or greater" in capsys.readouterr().err
+
+
+def test_threshold_from_config_file(capsys, tmp_path):
+    config = tmp_path / "config.toml"
+    config.write_text("threshold = 20\n", encoding="utf-8")
+    lines = lines_for(capsys, "--config", str(config))
+    assert lines["SS-003"].endswith("LOW")  # 15 < 20 from config
+
+
+def test_option_overrides_config_file(capsys, tmp_path):
+    config = tmp_path / "config.toml"
+    config.write_text("threshold = 20\n", encoding="utf-8")
+    lines = lines_for(capsys, "--config", str(config), "--threshold", "5")
+    assert not lines["SS-003"].endswith("LOW")  # 15 is not below 5

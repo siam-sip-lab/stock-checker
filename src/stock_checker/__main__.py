@@ -4,7 +4,8 @@ import argparse
 import sys
 
 from stock_checker import __version__
-from stock_checker.checks import DEFAULT_THRESHOLD, is_low
+from stock_checker.checks import is_low
+from stock_checker.config import load_threshold
 from stock_checker.reader import read_stock
 
 
@@ -24,8 +25,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--threshold",
         type=non_negative_int,
-        default=DEFAULT_THRESHOLD,
-        help=f"mark items below this quantity as LOW (default: {DEFAULT_THRESHOLD})",
+        default=None,
+        help="mark items below this quantity as LOW (overrides the config file)",
+    )
+    parser.add_argument(
+        "--config",
+        default="config.toml",
+        help="path to the config file (default: config.toml)",
     )
     parser.add_argument(
         "--version", action="version", version=f"%(prog)s {__version__}"
@@ -41,8 +47,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: file not found: {args.csv_path}", file=sys.stderr)
         return 1
 
+    threshold = (
+        args.threshold if args.threshold is not None else load_threshold(args.config)
+    )
     for item in items:
-        flag = "LOW" if is_low(item, args.threshold) else ""
+        flag = "LOW" if is_low(item, threshold) else ""
         line = f"{item.sku:<8} {item.name:<30} {item.warehouse:<14} {item.quantity:>5}  {flag}"
         print(line.rstrip())
     return 0
