@@ -15,13 +15,13 @@ def test_lists_every_item(capsys):
 
 def test_marks_low_items_with_default_threshold(capsys):
     lines = lines_for(capsys)
-    assert lines["SS-002"].endswith("LOW")      # 7  < 10
+    assert lines["SS-002"].endswith("LOW")  # 7  < 10
     assert not lines["SS-006"].endswith("LOW")  # 10 is not below 10
 
 
 def test_threshold_option(capsys):
     lines = lines_for(capsys, "--threshold", "20")
-    assert lines["SS-003"].endswith("LOW")      # 15 < 20
+    assert lines["SS-003"].endswith("LOW")  # 15 < 20
 
 
 def test_missing_file_gives_clear_error(capsys):

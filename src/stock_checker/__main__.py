@@ -27,7 +27,9 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_THRESHOLD,
         help=f"mark items below this quantity as LOW (default: {DEFAULT_THRESHOLD})",
     )
-    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
+    parser.add_argument(
+        "--version", action="version", version=f"%(prog)s {__version__}"
+    )
     return parser
 
 
