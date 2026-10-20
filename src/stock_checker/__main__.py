@@ -8,7 +8,7 @@ from dataclasses import asdict
 from stock_checker import __version__
 from stock_checker.checks import is_low
 from stock_checker.config import load_threshold, load_warehouse_thresholds
-from stock_checker.reader import read_stock
+from stock_checker.reader import load_inventory
 
 
 def non_negative_int(value: str) -> int:
@@ -50,7 +50,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
-        items = read_stock(args.csv_path)
+        items = load_inventory(args.csv_path)
     except FileNotFoundError:
         print(f"error: file not found: {args.csv_path}", file=sys.stderr)
         return 1

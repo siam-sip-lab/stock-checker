@@ -13,7 +13,7 @@ class Item:
     quantity: int
 
 
-def read_stock(path: str | Path) -> list[Item]:
+def load_inventory(path: str | Path) -> list[Item]:
     """Return every row of the stock CSV as an Item."""
     with Path(path).open(newline="", encoding="utf-8") as f:
         return [
