@@ -1,7 +1,9 @@
 """Entry point: python -m stock_checker <csv_path> [--threshold N]"""
 
 import argparse
+import json
 import sys
+from dataclasses import asdict
 
 from stock_checker import __version__
 from stock_checker.checks import is_low
@@ -34,6 +36,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="path to the config file (default: config.toml)",
     )
     parser.add_argument(
+        "--format",
+        choices=["text", "json"],
+        default="text",
+        help="output format (default: text)",
+    )
+    parser.add_argument(
         "--version", action="version", version=f"%(prog)s {__version__}"
     )
     return parser
@@ -50,8 +58,16 @@ def main(argv: list[str] | None = None) -> int:
     threshold = (
         args.threshold if args.threshold is not None else load_threshold(args.config)
     )
-    for item in items:
-        flag = "LOW" if is_low(item, threshold) else ""
+    rows = [(item, is_low(item, threshold)) for item in items]
+
+    if args.format == "json":
+        print(
+            json.dumps([{**asdict(item), "low": low} for item, low in rows], indent=2)
+        )
+        return 0
+
+    for item, low in rows:
+        flag = "LOW" if low else ""
         line = f"{item.sku:<8} {item.name:<30} {item.warehouse:<14} {item.quantity:>5}  {flag}"
         print(line.rstrip())
     return 0
