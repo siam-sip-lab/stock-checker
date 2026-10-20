@@ -14,3 +14,17 @@ def load_threshold(path: str | Path = "config.toml") -> int:
     with config_path.open("rb") as f:
         data = tomllib.load(f)
     return int(data.get("threshold", DEFAULT_THRESHOLD))
+
+
+def load_warehouse_thresholds(path: str | Path = "config.toml") -> dict[str, int]:
+    """Return {warehouse: threshold} for warehouses with their own setting."""
+    config_path = Path(path)
+    if not config_path.exists():
+        return {}
+    with config_path.open("rb") as f:
+        data = tomllib.load(f)
+    return {
+        name: int(settings["threshold"])
+        for name, settings in data.get("warehouses", {}).items()
+        if "threshold" in settings
+    }
