@@ -1,3 +1,7 @@
 # stock-checker settings
 # Items with quantity below this number are marked LOW.
 threshold = 10
+
+# Per-warehouse overrides. Warehouses not listed use the threshold above.
+[warehouses.chiang-mai]
+threshold = 5
