@@ -7,7 +7,7 @@ from dataclasses import asdict
 
 from stock_checker import __version__
 from stock_checker.checks import is_low
-from stock_checker.config import load_threshold
+from stock_checker.config import load_threshold, load_warehouse_thresholds
 from stock_checker.reader import read_stock
 
 
@@ -68,6 +68,12 @@ def main(argv: list[str] | None = None) -> int:
 
     for item, low in rows:
         flag = "LOW" if low else ""
+    overrides = (
+        {} if args.threshold is not None else load_warehouse_thresholds(args.config)
+    )
+    for item in items:
+        item_threshold = overrides.get(item.warehouse, threshold)
+        flag = "LOW" if is_low(item, item_threshold) else ""
         line = f"{item.sku:<8} {item.name:<30} {item.warehouse:<14} {item.quantity:>5}  {flag}"
         print(line.rstrip())
     return 0

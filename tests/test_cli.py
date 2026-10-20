@@ -74,3 +74,22 @@ def test_json_output(capsys):
 def test_text_output_is_default(capsys):
     assert main(["data/sample_stock.csv"]) == 0
     assert not capsys.readouterr().out.lstrip().startswith("[")
+
+
+def test_warehouse_threshold_from_config(capsys, tmp_path):
+    config = tmp_path / "config.toml"
+    config.write_text(
+        "threshold = 10\n[warehouses.bangna]\nthreshold = 20\n", encoding="utf-8"
+    )
+    lines = lines_for(capsys, "--config", str(config))
+    assert lines["SS-003"].endswith("LOW")  # bangna: 15 < 20
+    assert not lines["SS-005"].endswith("LOW")  # samut-prakan: 22, default 10
+
+
+def test_option_overrides_warehouse_thresholds(capsys, tmp_path):
+    config = tmp_path / "config.toml"
+    config.write_text(
+        "threshold = 10\n[warehouses.bangna]\nthreshold = 20\n", encoding="utf-8"
+    )
+    lines = lines_for(capsys, "--config", str(config), "--threshold", "5")
+    assert not lines["SS-003"].endswith("LOW")  # 15 is not below 5
