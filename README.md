@@ -1,5 +1,7 @@
 # stock-checker
 
+[![ci](https://github.com/siam-sip-lab/stock-checker/actions/workflows/ci.yml/badge.svg)](https://github.com/siam-sip-lab/stock-checker/actions/workflows/ci.yml)
+
 CLI that checks stock levels from a CSV file and flags low stock.
 
 ## Quick start
